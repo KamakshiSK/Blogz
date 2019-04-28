@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>{{page_title}}</title>
-        <style>
-            .error{
-                color:red;
-                font-style: oblique;
-            }
-            .success{
-                color:green;
-                font-style: oblique;
-            }
-        </style>
-    </head>
 
-    <body>
-        <div style='float: right'>
-            {% if 'email' in session %}
+<head>
+    <title>Blogz</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main_style.css') }}" />
+</head>
+
+<body>
+    <header id="main-header">
+        <div class="container">
+            <h1>Build Blogz</h1>
+        </div>
+    </header>
+
+    <nav id="navbar">
+        <div class="container">
+            <div id="main">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/blog">All Posts</a></li>
+                    <li><a href="/newpost">New Post</a></li>
+                </ul>
+            </div>
+            <div id="sidebar">
+                {% if 'email' in session %}
                 <em>{{ session['email'] }} </em>
                 <a href="/logout">Logout</a>
-            {% else %}
-                <a href="login">login</a> | <a href="register">register</a>
-            {% endif %}
+                {% else %}
+                <a href="/login">Login</a>
+                {% endif %}
+            </div>
         </div>
-        {% block nav %}
-        {% endblock %}
 
-        <nav>
-            <a href="/blog">Main Blog Page</a> <b>|</b>
-            <a href="/newpost">Add New Blog Entry </a> <b>|</b>
-        </nav>
+    </nav>
 
-
-
+    <div class="container">
         {% block content%}
 
         {% endblock %}
-    </body>
+    </div>
+</body>
 
-    <footer>
-        {% with messages=get_flashed_messages(category_filter=['success']) %}
+<footer id="main-footer">
 
-        <p class='success' align="right"> {{messages[0]}} </p>
 
-        {% endwith %}
-    </footer>
+    {% with messages=get_flashed_messages(category_filter=['success']) %}
+
+    <p class='success'> {{messages[0]}} </p>
+
+    {% endwith %}
+    <p>Copyright &copy; 2019 Blogz</p>
+</footer>
+
 </html>

@@ -8,16 +8,14 @@
     {% elif posts|length == 1 %}
         <h1>{{posts[0].title}}</h1></a>
         <p>{{posts[0].content}}</p>
-        <a href="/blog?user={{user.name}}">written by: {{user.name}}</a>
-        {{posts[0].timestamp}}
         <hr/>
     {% else %}
     <h1>{{title}}</h1>
-    <h4>Blogs by all users</h4>
+    <h4>written by {{user.name}}</h4>
         {% for post in posts %}
             <a href="/blog?id={{post.post_id}}"><h3>{{post.title}}</h3></a>
             <p>{{post.content}}</p>
-            <a href="/blog?user={{post.name}}">written by: {{post.name}}</a>
+            <a href="/blog?user={{user.name}}">written by: {{user.name}}</a>
             {{post.timestamp}}
             <hr/>
         {% endfor %}

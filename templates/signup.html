@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>Register to Build A Blog!</h1>
-<form action="/register" method="post">
+<form action="/signup" method="post">
     <table>
         {% with email_messages = get_flashed_messages(category_filter=['email_error']) %}
         {% with password_messages = get_flashed_messages(category_filter=['password_error']) %}

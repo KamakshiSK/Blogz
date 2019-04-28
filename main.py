@@ -4,7 +4,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.config['DEBUG'] =True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:launchcodelc101@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Blogz:launchcodelc101@localhost:8889/Blogz'
 
 app.config['SQLALCHEMY_ECHO'] = True
 
@@ -38,7 +38,7 @@ class User(db.Model):
 
 @app.before_request
 def require_login():
-    allowed_route = ['login', 'register']
+    allowed_route = ['login', 'signup','index', 'blog']
     if request.endpoint not in allowed_route and 'email' not in session:
         return redirect("/login")
 
@@ -70,7 +70,7 @@ def login():
         else:
             session['email'] = user_email
             flash('Logging successful.', category='success')
-            return redirect('/blog')
+            return redirect('/newpost')
 
     return render_template("login.html", email=user_email)
 
@@ -79,8 +79,8 @@ def logout():
     del session['email']
     return redirect('/')
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
     user_email=""
     if request.method == 'POST':
         user_email = request.form['email']
@@ -91,18 +91,25 @@ def register():
 
         if not user_email.strip():
             flash("Email cannot be empty", category='email_error')
-            redirect("/register")
+            redirect("/signup")
         elif not user_password.strip():
             flash("password cannot be empty", category="password_error")
-            redirect("/register")
+            redirect("/signup")
 
         elif user_password.isspace():
             flash("Password cannot have space", category='password_error')
-            redirect("/register")
+            redirect("/signup")
+
+        elif len(user_email) < 3:
+            flash("Invalid Email.", category='email_error')
+        
+        elif len(user_password) < 3:
+            flash("Invalid Password.", category='password_error')
+
 
         elif user_password != user_verify_pwd:
             flash("Passwords don't match.", category='verify_password_error')
-            redirect("/register")
+            redirect("/signup")
 
         elif not existing_user:
             new_user = User(user_email, user_password)
@@ -117,20 +124,31 @@ def register():
         else:
             flash("Duplicate User.", category="email_error")
 
-    return render_template("register.html",email=user_email)
+    return render_template("signup.html",email=user_email)
+
+@app.route('/')
+def index():
+    all_users = User.query.all()
+    return render_template("index.html", users = all_users)
 
 
 @app.route('/blog')
 def blog():
-    this_owner = User.query.filter_by(name=session['email']).first()
+    user = request.args.get('user')
+    selected_user = User.query.filter_by(name = user).first()
 
     id = request.args.get('id')
+
+    if user:
+        user_posts = Blog.query.filter_by(owner = selected_user).order_by(Blog.timestamp.desc()).all()
+        return render_template("singleUser.html", title="All Blogs", user = selected_user, posts = user_posts )
     if id:
         post = Blog.query.filter_by(post_id=id).first()
-        return render_template("blog.html", title = "Blog ", posts = [post] )
-    else:
-        all_posts = Blog.query.filter_by(owner=this_owner).order_by(Blog.timestamp.desc()).all()
-        return render_template("/blog.html", title = "Build a Blog", posts=all_posts)
+        post_owner=User.query.join(Blog).filter_by(owner_id=User.user_id).filter_by(post_id=id).first()
+        return render_template ("blog.html", user=post_owner, posts = [post])
+
+    all_posts_with_user = Blog.query.join(User).filter_by(user_id=Blog.owner_id).order_by(Blog.timestamp.desc()).add_column(Blog.content).add_column(Blog.post_id).add_column(Blog.title).add_column(User.name).add_column(Blog.timestamp).all()
+    return render_template("blog.html", title = "Build a Blog", posts = all_posts_with_user)
 
 @app.route('/newpost', methods=['GET', 'POST'])
 def newpost():
