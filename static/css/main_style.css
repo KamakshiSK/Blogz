@@ -19,7 +19,11 @@ body{
 	color:blue;
 }
 
-
+.box{
+	border: 5px red solid;
+	padding:20px;
+	margin-top:20px;
+}
 #main-footer{
 	background: #333;
 	color:#fff;
@@ -33,7 +37,8 @@ body{
 	float: left;
 }
 
-#main-footer .success {
+.success {
+	background-color: black;
 	color:greenyellow;
 	font-style: oblique;
 	float: left;

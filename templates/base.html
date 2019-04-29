@@ -41,15 +41,14 @@
     </div>
 </body>
 
-<footer id="main-footer">
-
+<footer>
 
     {% with messages=get_flashed_messages(category_filter=['success']) %}
 
     <p class='success'> {{messages[0]}} </p>
 
     {% endwith %}
-    <p>Copyright &copy; 2019 Blogz</p>
+    <p id='main-footer'>Copyright &copy; 2019 Blogz</p>
 </footer>
 
 </html>

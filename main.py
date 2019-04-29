@@ -1,40 +1,8 @@
 from flask import Flask, redirect, render_template, request, session, flash
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from models import Blog, User
+from app import db, app
 
-app = Flask(__name__)
-app.config['DEBUG'] =True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Blogz:launchcodelc101@localhost:8889/Blogz'
-
-app.config['SQLALCHEMY_ECHO'] = True
-
-db =SQLAlchemy(app)
 app.secret_key = "k3nd3ybtje9J3saY"
-
-class Blog(db.Model):
-    post_id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120))
-    content = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime)
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    
-    def __init__(self, title, content, owner, timestamp=None):
-        self.title = title
-        self.content =  content
-        if timestamp == None:
-            self.timestamp = datetime.utcnow()
-        self.owner = owner
-
-class User(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(120), nullable= False)
-    password = db.Column(db.String(120), nullable = False)
-
-    blogs = db.relationship('Blog', backref='owner')
-
-    def __init__(self, name, password):
-        self.name = name
-        self.password = password
 
 @app.before_request
 def require_login():
