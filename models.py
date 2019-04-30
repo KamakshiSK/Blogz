@@ -1,6 +1,6 @@
 from datetime import datetime
-
 from app import db
+from hashutils import make_pw_hash
 
 class Blog(db.Model):
     post_id = db.Column(db.Integer, primary_key=True)
@@ -25,4 +25,4 @@ class User(db.Model):
 
     def __init__(self, name, password):
         self.name = name
-        self.password = password
+        self.password = make_pw_hash(password)

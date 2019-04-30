@@ -8,6 +8,8 @@
     {% elif posts|length == 1 %}
         <h1>{{posts[0].title}}</h1></a>
         <p>{{posts[0].content}}</p>
+        <!-- <a href="/blog?user={{user.name}}">written by: {{user.name}}</a>-->
+        {{posts.timestamp}}
         <hr/>
     {% else %}
     <h1>{{title}}</h1>

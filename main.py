@@ -1,6 +1,7 @@
 from flask import Flask, redirect, render_template, request, session, flash
 from models import Blog, User
 from app import db, app
+from hashutils import check_pw_hash
 
 app.secret_key = "k3nd3ybtje9J3saY"
 
@@ -31,7 +32,7 @@ def login():
             flash('User does not exits. Please check the user name or regiter new.', category='error_email')
             return redirect('/login')
 
-        elif user.password != user_password:
+        elif check_pw_hash(user_password, user.password):
             flash('Password is incorrect.', category='error_password')
             return redirect('/login')
 

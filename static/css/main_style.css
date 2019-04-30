@@ -20,9 +20,10 @@ body{
 }
 
 .box{
-	border: 5px red solid;
+	border: 5px rgba(165, 5, 5, 0.993) solid;
 	padding:20px;
 	margin-top:20px;
+	background-color: lightgoldenrodyellow;
 }
 #main-footer{
 	background: #333;
