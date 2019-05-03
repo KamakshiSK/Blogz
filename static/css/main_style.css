@@ -20,11 +20,18 @@ body{
 }
 
 .box{
-	border: 5px rgba(165, 5, 5, 0.993) solid;
+	border: coral solid;
 	padding:20px;
 	margin-top:20px;
-	background-color: lightgoldenrodyellow;
+	background-color: gainsboro;
 }
+
+.container .box .info{
+	font-size: 8px;
+	font-style: italic;
+	color: aquamarine;
+}
+
 #main-footer{
 	background: #333;
 	color:#fff;

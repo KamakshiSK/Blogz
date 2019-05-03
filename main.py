@@ -32,7 +32,7 @@ def login():
             flash('User does not exits. Please check the user name or regiter new.', category='error_email')
             return redirect('/login')
 
-        elif check_pw_hash(user_password, user.password):
+        elif not check_pw_hash(user_password, user.password):
             flash('Password is incorrect.', category='error_password')
             return redirect('/login')
 
@@ -103,10 +103,10 @@ def index():
 
 @app.route('/blog')
 def blog():
-    user = request.args.get('user')
+    user = request.args.get('user')                     # blogs by selected user
     selected_user = User.query.filter_by(name = user).first()
 
-    id = request.args.get('id')
+    id = request.args.get('id')                         # single blog by blog id
 
     if user:
         user_posts = Blog.query.filter_by(owner = selected_user).order_by(Blog.timestamp.desc()).all()
@@ -115,7 +115,9 @@ def blog():
         post = Blog.query.filter_by(post_id=id).first()
         post_owner=User.query.join(Blog).filter_by(owner_id=User.user_id).filter_by(post_id=id).first()
         return render_template ("blog.html", user=post_owner, posts = [post])
-
+    
+    # all posts by all users, 5 blogs per pages
+    #page = request.args.get('page', 1)
     all_posts_with_user = Blog.query.join(User).filter_by(user_id=Blog.owner_id).order_by(Blog.timestamp.desc()).add_column(Blog.content).add_column(Blog.post_id).add_column(Blog.title).add_column(User.name).add_column(Blog.timestamp).all()
     return render_template("blog.html", title = "Build a Blog", posts = all_posts_with_user)
 

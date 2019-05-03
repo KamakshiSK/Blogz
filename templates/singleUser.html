@@ -3,24 +3,33 @@
 
 {% block content%}
 
-    {% if posts|length == 0 %}
-        <p>No Posts yet</p>
-    {% elif posts|length == 1 %}
-        <h1>{{posts[0].title}}</h1></a>
-        <p>{{posts[0].content}}</p>
-        <!-- <a href="/blog?user={{user.name}}">written by: {{user.name}}</a>-->
-        {{posts.timestamp}}
-        <hr/>
-    {% else %}
-    <h1>{{title}}</h1>
-    <h4>written by {{user.name}}</h4>
-        {% for post in posts %}
-            <a href="/blog?id={{post.post_id}}"><h3>{{post.title}}</h3></a>
-            <p>{{post.content}}</p>
-            <a href="/blog?user={{user.name}}">written by: {{user.name}}</a>
-            {{post.timestamp}}
-            <hr/>
-        {% endfor %}
-    {% endif %}
+{% if posts|length == 0 %}
+<p>No Posts yet</p>
+{% elif posts|length == 1 %}
+<div class="box">
+    <h1>{{posts[0].title}}</h1></a>
+    <p>{{posts[0].content}}</p>
+    <!-- <a href="/blog?user={{user.name}}">written by: {{user.name}}</a>-->
+    {{posts.timestamp}}
+</div>
+
+<hr />
+{% else %}
+<h1>{{title}}</h1>
+<h4>written by {{user.name}}</h4>
+{% for post in posts %}
+<div class="box">
+
+    <a href="/blog?id={{post.post_id}}">
+        <h3>{{post.title}}</h3>
+    </a>
+    <p>{{post.content}}</p>
+    Written by: <a href="/blog?user={{user.name}}">{{user.name}}</a>
+    {{post.timestamp}}
+</div>
+<hr />
+
+{% endfor %}
+{% endif %}
 
 {% endblock %}
